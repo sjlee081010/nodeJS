@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 | 작성</title>
+</head>
+<body>
+  <h1>글 작성</h1>
+  <form id="form">
+    <input type="text" id="title" placeholder="제목" required><br>
+    <textarea id="content" placeholder="내용" required></textarea><br>
+    <button type="submit">추가</button>
+  </form>
+  <button onclick="{location.href='index.html'}">목록으로</button>
+
+  <script>
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      await fetch('/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content })
+      });
+      location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

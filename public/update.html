@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 | 수정</title>
+</head>
+<body>
+  <h1>글 수정</h1>
+  <form id="form">
+    <input type="text" id="title" required><br>
+    <textarea id="content" required></textarea><br>
+    <button type="submit">수정</button>
+  </form>
+  <button onclick="{location.href='index.html'}">목록으로</button>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+
+    fetch(`/posts/${id}`)
+      .then(res => res.json())
+      .then(post => {
+        document.getElementById('title').value = post.title;
+        document.getElementById('content').value = post.content;
+      });
+
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      await fetch(`/posts/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content })
+      });
+      location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

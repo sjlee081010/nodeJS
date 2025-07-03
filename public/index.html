@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 | 홈</title>
+</head>
+<body>
+  <h1>게시판</h1>
+  <button onclick="{location.href='create.html'}">추가</button>
+  <ul id="list"></ul>
+
+  <script>
+    async function get() {
+      const res = await fetch('/posts');
+      const posts = await res.json();
+      const list = document.getElementById('list');
+      list.innerHTML = '';
+      posts.forEach(post => {
+        const li = document.createElement('li');
+        li.textContent = `${post.title}`;
+        li.style.cursor = 'pointer';
+
+        li.onclick = () => location.href = `update.html?id=${post.id}`;
+
+        li.oncontextmenu = async (e) => {
+          e.preventDefault();
+          if (confirm('삭제?')) {
+            await fetch(`/posts/${post.id}`, { method: 'DELETE' });
+            get();
+          }
+        };
+
+        list.appendChild(li);
+      });
+    }
+
+    get();
+  </script>
+</body>
+</html>
